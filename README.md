@@ -1,4 +1,4 @@
-# Under_water-bot
+# UNDER_WATER AUV SIMULATION
 under water auv simulation using ros2humble
 ## Design Spesification
 ### Main Body (base_link):
