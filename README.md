@@ -44,3 +44,8 @@ Implement dynamic behavior for thrusters using ROS control plugins or Gazebo sim
 
 ![Alt Text]("https://github.com/Donfred-Shaji/Under_water-bot/commit/569ba9b98de7af9772df7ce6660cec58d0dd2b73")
 
+ ## Total work-done 
+ 
+Developed an Autonomous Underwater Vehicle (AUV) model leveraging URDF (Unified Robot Description Format) and Xacro files to define its structure and dynamics. The project included comprehensive simulation development using RViz and Gazebo to visualize and test the AUV's behavior in virtual environments.
+
+For control systems, I implemented teleoperation functionalities, allowing manual navigation and remote operation. Additionally, I designed and integrated autonomous control algorithms, enabling the AUV to navigate and execute tasks independently. This work involved integrating sensors, path-planning mechanisms, and advanced control strategies to ensure robust and efficient underwater operations.
