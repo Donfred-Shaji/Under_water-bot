@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="auv">
+
+  <!-- Main body -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="30.0" />
+      <inertia ixx="2.0" ixy="0.0" ixz="0.0" iyy="2.0" iyz="0.0" izz="2.0" />
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder length="1.0" radius="0.2" />
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="1.0" radius="0.2" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Thrusters -->
+  <xacro:property name="thruster_mass" value="1.0"/>
+  <xacro:macro name="thruster" params="name xyz rpy">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="${thruster_mass}" />
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+      <visual>
+        <geometry>
+          <box size="0.1 0.1 0.2" />
+        </geometry>
+        <material name="red">
+          <color rgba="1 0 0 1" />
+        </material>
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.1 0.1 0.2" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="${name}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Adding six thrusters -->
+  <xacro:thruster name="thruster_front_left" xyz="0.4 0.2 -0.2" rpy="0 0 0" />
+  <xacro:thruster name="thruster_front_right" xyz="0.4 -0.2 -0.2" rpy="0 0 0" />
+  <xacro:thruster name="thruster_back_left" xyz="-0.4 0.2 -0.2" rpy="0 0 0" />
+  <xacro:thruster name="thruster_back_right" xyz="-0.4 -0.2 -0.2" rpy="0 0 0" />
+  <xacro:thruster name="thruster_top_left" xyz="0 0.2 0.3" rpy="0 0 0" />
+  <xacro:thruster name="thruster_top_right" xyz="0 -0.2 0.3" rpy="0 0 0" />
+
+  <!-- Sensors -->
+  <xacro:macro name="sensor" params="name xyz rpy type geometry">
+    <link name="${name}">
+      <visual>
+        <geometry>
+          <!-- Handle geometry type dynamically -->
+          <xacro:if value="${geometry == 'box'}">
+            <box size="0.1 0.1 0.1"/>
+          </xacro:if>
+          <xacro:if value="${geometry == 'sphere'}">
+            <sphere radius="0.05"/>
+          </xacro:if>
+          <xacro:if value="${geometry == 'cylinder'}">
+            <cylinder length="0.1" radius="0.05"/>
+          </xacro:if>
+        </geometry>
+        <material name="green">
+          <color rgba="0 1 0 1" />
+        </material>
+      </visual>
+    </link>
+    <joint name="${name}_joint" type="fixed">
+      <parent link="base_link" />
+      <child link="${name}" />
+      <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Adding sensors -->
+  <xacro:sensor name="imu" xyz="0 0 0" rpy="0 0 0" type="imu" geometry="box"/>
+  <xacro:sensor name="camera" xyz="0.5 0 0" rpy="0 0 0" type="camera" geometry="box"/>
+  <xacro:sensor name="pressure_sensor" xyz="0 0 -0.5" rpy="0 0 0" type="pressure" geometry="sphere"/>
+
+  <!-- Gazebo Plugin for Velocity Control -->
+  <gazebo>
+    <plugin name="velocity_controller" filename="libgazebo_ros_velocity_controller.so">
+      <ros>
+        <namespace>/auv</namespace>
+        <remapping>cmd_vel:=/cmd_vel</remapping>
+      </ros>
+      <body_name>base_link</body_name>
+      <cmd_vel_topic>/cmd_vel</cmd_vel_topic>
+      <odom_topic>/odom</odom_topic>
+      <linear_velocity_max>2.0</linear_velocity_max>
+      <angular_velocity_max>1.0</angular_velocity_max>
+      <update_rate>50.0</update_rate>
+    </plugin>
+  </gazebo>
+</robot>
+
