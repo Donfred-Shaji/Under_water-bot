@@ -40,3 +40,7 @@ Link the sensors to specific ROS plugins (e.g., camera and IMU sensors) for real
 
 ### Thruster Dynamics:
 Implement dynamic behavior for thrusters using ROS control plugins or Gazebo simulation.
+# Image of Desingn done in rviz 
+
+![Alt Text]("C:\Users\donfr\Downloads\Screenshot from 2025-01-10 11-47-01.png")
+
